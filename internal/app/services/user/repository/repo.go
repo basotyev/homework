@@ -3,15 +3,21 @@ package repository
 import (
 	"context"
 	"github.com/jackc/pgx/v4/pgxpool"
-	"lesson13/models"
-	"lesson13/user"
+	"lesson13/internal/app/models"
 )
+
+type Repository interface {
+	CreateUser(ctx context.Context, user *models.User) error
+	UpdateUserById(ctx context.Context, user *models.User) error
+	GetUserById(ctx context.Context, id int) (*models.User, error)
+	RemoveUserById(ctx context.Context, id int) error
+}
 
 type PostgresUserRepository struct {
 	db *pgxpool.Pool
 }
 
-func NewPostgresUserRepository(db *pgxpool.Pool) user.Repository {
+func NewPostgresUserRepository(db *pgxpool.Pool) Repository {
 	return &PostgresUserRepository{
 		db: db,
 	}
