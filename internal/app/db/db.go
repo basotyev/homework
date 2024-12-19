@@ -16,7 +16,7 @@ func NewPostgresConnection(dsn string) (*pgxpool.Pool, error) {
 	if err != nil {
 		return nil, err
 	}
-	m, err := migrate.New("file://db/migrations", dsn)
+	m, err := migrate.New("file://internal/app/db/migrations", dsn)
 	if err != nil {
 		return nil, err
 	}
