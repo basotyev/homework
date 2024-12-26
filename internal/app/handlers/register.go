@@ -6,6 +6,7 @@ import (
 
 type RegisterRequest struct {
 	Email    string `json:"email"`
+	Username string `json:"username"`
 	Password string `json:"password"`
 }
 
@@ -18,13 +19,14 @@ type Data struct {
 }
 
 func (h *Handler) Register(c *gin.Context) {
+	getUserId(c)
 	var req RegisterRequest
 	err := c.BindJSON(&req)
 	if err != nil {
 		c.JSON(400, RegisterResponse{Status: "invalid input"})
 		return
 	}
-	err = h.DI.UserUseCase.Register(c, req.Email, req.Password)
+	err = h.DI.UserUseCase.Register(c, req.Username, req.Email, req.Password)
 	if err != nil {
 		c.JSON(500, RegisterResponse{Status: "invalid input"})
 		return

@@ -1,7 +1,9 @@
 package main
 
-import "lesson13/internal/app"
+import (
+	"lesson13/internal"
+)
 
 func main() {
-	app.Run()
+	internal.Run()
 }

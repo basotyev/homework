@@ -10,6 +10,7 @@ type Repository interface {
 	CreateUser(ctx context.Context, user *models.User) error
 	UpdateUserById(ctx context.Context, user *models.User) error
 	GetUserById(ctx context.Context, id int) (*models.User, error)
+	GetUserByEmail(ctx context.Context, email string) (*models.User, error)
 	RemoveUserById(ctx context.Context, id int) error
 }
 
@@ -24,7 +25,7 @@ func NewRepository(db *pgxpool.Pool) Repository {
 }
 
 func (p *repository) CreateUser(ctx context.Context, user *models.User) error {
-	row := p.db.QueryRow(ctx, `INSERT INTO users(name, email, age) VALUES ($1, $2, $3) RETURNING id`, user.Name, user.Email, user.Age)
+	row := p.db.QueryRow(ctx, `INSERT INTO users(name, email, password, age) VALUES ($1, $2, $3, $4) RETURNING id`, user.Name, user.Email, user.Password, user.Age)
 	err := row.Scan(&user.Id)
 	return err
 }
@@ -36,12 +37,21 @@ func (p *repository) UpdateUserById(ctx context.Context, user *models.User) erro
 
 func (p *repository) GetUserById(ctx context.Context, id int) (*models.User, error) {
 	var usr models.User
-	row := p.db.QueryRow(ctx, `SELECT name, email, age, created_at, updated_at FROM users WHERE id = $1`, id)
-	err := row.Scan(&usr.Name, &usr.Email, &usr.Age, &usr.CreatedAt, &usr.UpdatedAt)
+	row := p.db.QueryRow(ctx, `SELECT name, email, password, age, created_at, updated_at FROM users WHERE id = $1`, id)
+	err := row.Scan(&usr.Name, &usr.Email, &usr.Password, &usr.Age, &usr.CreatedAt, &usr.UpdatedAt)
 	if err != nil {
 		return nil, err
 	}
 	usr.Id = id
+	return &usr, nil
+}
+func (p *repository) GetUserByEmail(ctx context.Context, email string) (*models.User, error) {
+	var usr models.User
+	row := p.db.QueryRow(ctx, `SELECT id, name, email, password, age, created_at, updated_at FROM users WHERE email = $1`, email)
+	err := row.Scan(&usr.Id, &usr.Name, &usr.Email, &usr.Password, &usr.Age, &usr.CreatedAt, &usr.UpdatedAt)
+	if err != nil {
+		return nil, err
+	}
 	return &usr, nil
 }
 
