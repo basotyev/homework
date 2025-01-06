@@ -13,13 +13,13 @@ var secret = []byte("Mwefkjnkjn234k1@mk&4Jnams")
 func AuthMiddleware(c *gin.Context) {
 	authHeader := c.GetHeader("Authorization") // "Bearer ertgnoenrg.fdgdfgdf.gdfgdfgdfg"
 	if authHeader == "" {
-		c.JSON(http.StatusUnauthorized, "token was not found")
+		c.JSON(http.StatusUnauthorized, map[string]string{"error": "token was not found"})
 		c.Abort()
 		return
 	}
 	bearer := strings.Split(authHeader, " ")
 	if len(bearer) != 2 || bearer[0] != "Bearer" {
-		c.JSON(http.StatusUnauthorized, "invalid token")
+		c.JSON(http.StatusUnauthorized, map[string]string{"error": "invalid token"})
 		c.Abort()
 		return
 	}
@@ -27,7 +27,7 @@ func AuthMiddleware(c *gin.Context) {
 	token, err := verifyToken(bearer[1])
 	if err != nil {
 		fmt.Printf("Token verification failed: %v\\n", err)
-		c.JSON(http.StatusUnauthorized, "invalid token")
+		c.JSON(http.StatusUnauthorized, map[string]string{"error": "invalid token"})
 		c.Abort()
 		return
 	}
@@ -44,7 +44,6 @@ func verifyToken(tokenString string) (*jwt.Token, error) {
 	token, err := jwt.Parse(tokenString, func(token *jwt.Token) (interface{}, error) {
 		return secret, nil
 	})
-
 	if err != nil {
 		return nil, err
 	}

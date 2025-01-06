@@ -24,7 +24,7 @@ func InitRoutes(router *gin.Engine, di *app.DI) {
 		users.GET("/healthcheck", h.test)
 	}
 	inner.POST("/login", h.postLogin) // /api/v1/login
-	inner.POST("/refresh", h.)
+	inner.POST("/refresh", h.postRefresh)
 
 }
 

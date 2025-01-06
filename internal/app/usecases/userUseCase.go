@@ -47,7 +47,26 @@ func (u *userUseCase) Login(ctx context.Context, email, password string) (*model
 }
 
 func (u *userUseCase) Refresh(ctx context.Context, refresh string) (*models.Token, error) {
-
+	id, err := u.authService.ValidateRefreshToken(refresh)
+	if err != nil {
+		return nil, err
+	}
+	user, err := u.userService.GetUserById(ctx, id)
+	if err != nil {
+		return nil, err
+	}
+	token, err := u.authService.CreateToken(id, user.Name)
+	if err != nil {
+		return nil, utils.ErrInternalServerError
+	}
+	newRefresh, err := u.authService.CreateRefreshToken(id)
+	if err != nil {
+		return nil, utils.ErrInternalServerError
+	}
+	return &models.Token{
+		AccessToken:  token,
+		RefreshToken: newRefresh,
+	}, nil
 }
 
 func NewUserUseCase(userService user.Service, authService auth.Service) UserUseCase {

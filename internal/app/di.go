@@ -14,10 +14,11 @@ type DI struct {
 
 func NewDI(db *pgxpool.Pool) *DI {
 	var secret = []byte("Mwefkjnkjn234k1@mk&4Jnams")
+	var refreshSecret = []byte("Nmsjdnfkjn234123#KJNKJN")
 	userRepo := userR.NewRepository(db)
 
 	userService := userS.NewService(userRepo)
-	authService := authS.NewService(secret)
+	authService := authS.NewService(secret, refreshSecret)
 
 	userUseCase := usecases.NewUserUseCase(userService, authService)
 	return &DI{
