@@ -10,7 +10,7 @@ import (
 )
 
 func Run() {
-	db, err := db2.NewPostgresConnection("postgres://postgres:pass@localhost:5439/test-db?sslmode=disable")
+	db, err := db2.NewPostgresConnection("postgres://postgres:pass@api-db:5439/test-db?sslmode=disable")
 	if err != nil {
 		log.Fatalln(err)
 		return

@@ -5,6 +5,8 @@ RUN go mod download
 COPY . .
 RUN go build -o main ./cmd/basic_server/main.go
 
+
+
 FROM alpine:3.19 AS runner
 WORKDIR app
 COPY --from=build-stage /app/internal/app/db/migrations ./internal/app/db/migrations
