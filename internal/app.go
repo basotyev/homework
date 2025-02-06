@@ -1,27 +1,34 @@
 package internal
 
 import (
+	"flag"
+	"fmt"
 	"github.com/gin-gonic/gin"
+	"lesson13/configs"
 	"lesson13/internal/app"
-	db2 "lesson13/internal/app/db"
 	"lesson13/internal/app/handlers"
 	"log"
 	"net/http"
 )
 
 func Run() {
-	db, err := db2.NewPostgresConnection("postgres://postgres:pass@api-db:5439/test-db?sslmode=disable")
+	var path string
+	flag.StringVar(&path, "config", "./configs/config.yml", "для конфигурации")
+	flag.Parse()
+	config, err := configs.NewConfig(path)
 	if err != nil {
 		log.Fatalln(err)
-		return
 	}
-	di := app.NewDI(db)
+	di := app.NewDI(config)
 
 	router := gin.Default()
 	handlers.InitRoutes(router, di)
 	server := &http.Server{
-		Addr:    ":8080",
+		Addr:    fmt.Sprintf(":%d", config.App.Port),
 		Handler: router,
 	}
-	server.ListenAndServe()
+	err = server.ListenAndServe()
+	if err != nil {
+		log.Fatalln(err)
+	}
 }

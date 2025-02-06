@@ -1,0 +1,14 @@
+app:
+  port: 8080
+  env: production
+
+db:
+  user: postgres
+  password: pass
+  host: localhost
+  port: 5434
+  name: test-db
+
+token:
+  access: "skdjnfksdjskdjfnsk"
+  refresh: "kwjernfkwejnfkwe"
