@@ -6,6 +6,7 @@ import (
 	"lesson13/internal/app/models"
 )
 
+//go:generate moq -out repo_mock.go . Repository
 type Repository interface {
 	CreateUser(ctx context.Context, user *models.User) error
 	UpdateUserById(ctx context.Context, user *models.User) error
