@@ -11,6 +11,7 @@ import (
 )
 
 type DI struct {
+	Config      *configs.Config
 	UserUseCase usecases.UserUseCase
 }
 
@@ -30,5 +31,6 @@ func NewDI(config *configs.Config) *DI {
 	userUseCase := usecases.NewUserUseCase(userService, authService)
 	return &DI{
 		UserUseCase: userUseCase,
+		Config:      config,
 	}
 }

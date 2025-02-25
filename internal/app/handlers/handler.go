@@ -2,9 +2,12 @@ package handlers
 
 import (
 	"github.com/gin-gonic/gin"
+	swaggerFiles "github.com/swaggo/files"
+	ginSwagger "github.com/swaggo/gin-swagger"
+	_ "lesson13/docs"
 	"lesson13/internal/app"
 	"lesson13/internal/app/middleware"
-	"net/http"
+	"lesson13/internal/app/models"
 	"strconv"
 )
 
@@ -17,9 +20,12 @@ func InitRoutes(router *gin.Engine, di *app.DI) {
 		DI: di,
 	}
 	inner := router.Group("/api/v1")
+	if di.Config.App.Env != models.EnvProduction {
+		inner.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))
+	}
 	users := inner.Group("/users")
 	{
-		users.Handle(http.MethodPost, "/", h.Register)
+		users.POST("/", h.Register)
 		users.Use(middleware.AuthMiddleware)
 		users.GET("/healthcheck", h.test)
 	}

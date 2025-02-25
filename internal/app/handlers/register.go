@@ -18,8 +18,21 @@ type RegisterResponse struct {
 type Data struct {
 }
 
+// Register godoc
+//
+//	@Summary		Create new user
+//	@Description	Proceed registration on the service using email, username, password
+//	@Tags			users
+//	@Security		Bearer
+//	@Accept			json
+//	@Produce		json
+//	@Param			data	body		RegisterRequest	true	"Request input struct"
+//	@Success		200		{object}	RegisterResponse
+//	@Failure		400		{object}	RegisterResponse
+//	@Failure		404		{object}	RegisterResponse
+//	@Failure		500		{object}	RegisterResponse
+//	@Router			/users/ [post]
 func (h *Handler) Register(c *gin.Context) {
-	getUserId(c)
 	var req RegisterRequest
 	err := c.BindJSON(&req)
 	if err != nil {
@@ -31,5 +44,5 @@ func (h *Handler) Register(c *gin.Context) {
 		c.JSON(500, RegisterResponse{Status: "invalid input"})
 		return
 	}
-	c.JSON(200, gin.H{})
+	c.JSON(200, RegisterResponse{Status: "success", Data: &Data{}})
 }
