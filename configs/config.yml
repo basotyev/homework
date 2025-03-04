@@ -12,3 +12,9 @@ db:
 token:
   access: "skdjnfksdjskdjfnsk"
   refresh: "kwjernfkwejnfkwe"
+  access_expire: 10 # 10 minutes
+  refresh_expire: 20 # 20 minutes
+
+redis:
+  host: localhost
+  port: 6379

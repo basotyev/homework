@@ -24,7 +24,15 @@ services:
     networks:
       - internal
 
-
+  redis:
+    container_name: redis
+    image: redis:7-alpine3.19
+    ports:
+      - "6379:6379"
+    volumes:
+      - ./redis:/data
+    networks:
+      - internal
 
 networks:
   internal:

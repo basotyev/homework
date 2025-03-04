@@ -20,6 +20,12 @@ type Config struct {
 	Token struct {
 		AccessSecret  string `yaml:"access"`
 		RefreshSecret string `yaml:"refresh"`
+		AccessExpire  int    `yaml:"access_expire"`
+		RefreshExpire int    `yaml:"refresh_expire"`
+	}
+	Redis struct {
+		Host string `yaml:"host"`
+		Port int    `yaml:"port"`
 	}
 }
 

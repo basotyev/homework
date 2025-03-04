@@ -10,6 +10,7 @@ RUN go build -o main ./cmd/basic_server/main.go
 FROM alpine:3.19 AS runner
 WORKDIR app
 COPY --from=build-stage /app/internal/app/db/migrations ./internal/app/db/migrations
+COPY --from=build-stage /app/configs/config.yml /app/configs/config.yml
 COPY --from=build-stage /app/main .
 EXPOSE 8080
 CMD ["/app/main"]

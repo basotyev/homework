@@ -32,11 +32,11 @@ func (u *userUseCase) Login(ctx context.Context, email, password string) (*model
 	if password != usr.Password {
 		return nil, utils.ErrIncorrectPassword
 	}
-	token, err := u.authService.CreateToken(usr.Id, usr.Name)
+	token, err := u.authService.CreateToken(ctx, usr.Id, usr.Name)
 	if err != nil {
 		return nil, utils.ErrInternalServerError
 	}
-	refresh, err := u.authService.CreateRefreshToken(usr.Id)
+	refresh, err := u.authService.CreateRefreshToken(ctx, usr.Id)
 	if err != nil {
 		return nil, utils.ErrInternalServerError
 	}
@@ -47,7 +47,7 @@ func (u *userUseCase) Login(ctx context.Context, email, password string) (*model
 }
 
 func (u *userUseCase) Refresh(ctx context.Context, refresh string) (*models.Token, error) {
-	id, err := u.authService.ValidateRefreshToken(refresh)
+	id, err := u.authService.ValidateRefreshToken(ctx, refresh)
 	if err != nil {
 		return nil, err
 	}
@@ -55,11 +55,11 @@ func (u *userUseCase) Refresh(ctx context.Context, refresh string) (*models.Toke
 	if err != nil {
 		return nil, err
 	}
-	token, err := u.authService.CreateToken(id, user.Name)
+	token, err := u.authService.CreateToken(ctx, id, user.Name)
 	if err != nil {
 		return nil, utils.ErrInternalServerError
 	}
-	newRefresh, err := u.authService.CreateRefreshToken(id)
+	newRefresh, err := u.authService.CreateRefreshToken(ctx, id)
 	if err != nil {
 		return nil, utils.ErrInternalServerError
 	}

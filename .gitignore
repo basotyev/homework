@@ -1,4 +1,4 @@
 /.idea
 /postgres
-
+/redis
 *_mock.go
